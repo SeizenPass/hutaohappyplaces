@@ -1,0 +1,2 @@
+rootProject.name='HuTaoHappyPlaces'
+include ':app'
