@@ -8,10 +8,15 @@
     <string name="text_add_image">ADD IMAGE</string>
     <string name="btn_text_save">SAVE</string>
 
-    <string name="note_text_no_happy_places_found_yet_kindly_add_one">No Happy Places Found Yet. Kindly add one.</string>
+    <string name="note_text_no_happy_places_found_yet_kindly_add_one">No Hu Tao Happy Places Found Yet. Kindly add one.</string>
     <string name="image_content_description">image</string>
 
     <string name="btn_text_view_on_map">VIEW ON MAP</string>
     <string name="title_activity_maps">Map</string>
     <string name="title_activity_maps2">Map</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="create_account">CREATE ACCOUNT</string>
+    <string name="log_in">Log In</string>
+    <string name="are_you_new_here">ARE YOU NEW HERE?</string>
 </resources>

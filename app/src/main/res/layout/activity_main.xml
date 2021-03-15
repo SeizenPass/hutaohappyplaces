@@ -7,6 +7,14 @@
     tools:context=".activities.MainActivity"
     android:background="@drawable/bg">
 
+    <ProgressBar
+        android:id="@+id/progressBar1"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="invisible"/>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_happy_places_list"
         android:layout_width="match_parent"
@@ -31,5 +39,14 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
+        android:backgroundTint="@color/secondary_text_color"
         app:srcCompat="@drawable/ic_action_add_24dp" />
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabLeave"
+        android:backgroundTint="@color/secondary_text_color"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|start"
+        android:layout_margin="@dimen/fab_margin"
+        app:srcCompat="@drawable/ic_exit_to_app_black_24dp" />
 </FrameLayout>
