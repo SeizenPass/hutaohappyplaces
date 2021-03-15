@@ -6,7 +6,10 @@ import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteException
 import android.database.sqlite.SQLiteOpenHelper
+import android.graphics.Bitmap
+import com.example.hutaohappyplaces.R
 import com.example.hutaohappyplaces.models.HappyPlaceModel
+import kotlinx.android.synthetic.main.activity_auth.*
 
 //creating the database logic, extending the SQLiteOpenHelper base class
 class DatabaseHandler(context: Context) :
@@ -55,7 +58,7 @@ class DatabaseHandler(context: Context) :
 
         val contentValues = ContentValues()
         contentValues.put(KEY_TITLE, happyPlace.title) // HappyPlaceModelClass TITLE
-        contentValues.put(KEY_IMAGE, happyPlace.image) // HappyPlaceModelClass IMAGE
+        //contentValues.put(KEY_IMAGE, happyPlace.image) // HappyPlaceModelClass IMAGE
         contentValues.put(
             KEY_DESCRIPTION,
             happyPlace.description
@@ -89,17 +92,17 @@ class DatabaseHandler(context: Context) :
             val cursor: Cursor = db.rawQuery(selectQuery, null)
             if (cursor.moveToFirst()) {
                 do {
-                    val place = HappyPlaceModel(
-                            cursor.getInt(cursor.getColumnIndex(KEY_ID)),
+                    /*val place = HappyPlaceModel(
+                            //cursor.getInt(cursor.getColumnIndex(KEY_ID)),
                             cursor.getString(cursor.getColumnIndex(KEY_TITLE)),
-                            cursor.getString(cursor.getColumnIndex(KEY_IMAGE)),
+                            //cursor.getString(cursor.getColumnIndex(KEY_IMAGE)),
                             cursor.getString(cursor.getColumnIndex(KEY_DESCRIPTION)),
                             cursor.getString(cursor.getColumnIndex(KEY_DATE)),
                             cursor.getString(cursor.getColumnIndex(KEY_LOCATION)),
                             cursor.getDouble(cursor.getColumnIndex(KEY_LATITUDE)),
                             cursor.getDouble(cursor.getColumnIndex(KEY_LONGITUDE))
                     )
-                    happyPlaceList.add(place)
+                    happyPlaceList.add(place)*/
 
                 } while (cursor.moveToNext())
             }
@@ -118,7 +121,7 @@ class DatabaseHandler(context: Context) :
         val db = this.writableDatabase
         val contentValues = ContentValues()
         contentValues.put(KEY_TITLE, happyPlace.title) // HappyPlaceModelClass TITLE
-        contentValues.put(KEY_IMAGE, happyPlace.image) // HappyPlaceModelClass IMAGE
+        //contentValues.put(KEY_IMAGE, happyPlace.image) // HappyPlaceModelClass IMAGE
         contentValues.put(
             KEY_DESCRIPTION,
             happyPlace.description
@@ -130,7 +133,9 @@ class DatabaseHandler(context: Context) :
 
         // Updating Row
         val success =
-            db.update(TABLE_HAPPY_PLACE, contentValues, KEY_ID + "=" + happyPlace.id, null)
+            db.update(TABLE_HAPPY_PLACE, contentValues, KEY_ID + "="
+                    //+ happyPlace.id
+                , null)
         //2nd argument is String containing nullColumnHack
 
         db.close() // Closing database connection
@@ -143,7 +148,9 @@ class DatabaseHandler(context: Context) :
     fun deleteHappyPlace(happyPlace: HappyPlaceModel): Int {
         val db = this.writableDatabase
         // Deleting Row
-        val success = db.delete(TABLE_HAPPY_PLACE, KEY_ID + "=" + happyPlace.id, null)
+        val success = db.delete(TABLE_HAPPY_PLACE, KEY_ID + "="
+               // + happyPlace.id
+            , null)
         //2nd argument is String containing nullColumnHack
         db.close() // Closing database connection
         return success

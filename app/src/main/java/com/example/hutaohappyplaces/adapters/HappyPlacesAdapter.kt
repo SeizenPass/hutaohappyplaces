@@ -7,12 +7,15 @@ import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.example.hutaohappyplaces.R
 import com.example.hutaohappyplaces.activities.AddHappyPlaceActivity
 import com.example.hutaohappyplaces.activities.MainActivity
 import com.example.hutaohappyplaces.database.DatabaseHandler
 import com.example.hutaohappyplaces.models.HappyPlaceModel
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.FirebaseDatabase
 import kotlinx.android.synthetic.main.item_happy_place.view.*
 
 open class HappyPlacesAdapter(
@@ -76,9 +79,10 @@ open class HappyPlacesAdapter(
     /**
      * A function to edit the added happy place detail and pass the existing details through intent.
      */
-    fun notifyEditItem(activity: Activity, position: Int, requestCode: Int) {
+    fun notifyEditItem(activity: Activity, position: Int, requestCode: Int, keyList: ArrayList<String>) {
         val intent = Intent(context, AddHappyPlaceActivity::class.java)
         intent.putExtra(MainActivity.EXTRA_PLACE_DETAILS, list[position])
+        intent.putExtra(MainActivity.KEY, keyList[position])
         activity.startActivityForResult(
                 intent,
                 requestCode
@@ -90,15 +94,26 @@ open class HappyPlacesAdapter(
     /**
      * A function to delete the added happy place detail from the local storage.
      */
-    fun removeAt(position: Int) {
-
-        val dbHandler = DatabaseHandler(context)
+    fun removeAt(position: Int, keyList: ArrayList<String>) {
+        val currentUser = FirebaseAuth.getInstance().currentUser
+        val dbHandler = FirebaseDatabase.getInstance()
+        val dbref = dbHandler.getReference("users")
+            .child(currentUser!!.email!!.toString().replace('.', ',')).child("places")
+        val deletePlace = dbref.child(keyList[position]).removeValue().addOnCompleteListener {
+            if (it.isSuccessful) {
+                Toast.makeText(context, "Place was deleted", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(context, "Something went wrong", Toast.LENGTH_SHORT).show()
+            }
+        }
+        /*val dbHandler = DatabaseHandler(context)
         val isDeleted = dbHandler.deleteHappyPlace(list[position])
 
         if (isDeleted > 0) {
             list.removeAt(position)
             notifyItemRemoved(position)
-        }
+        }*/
+
     }
 
     /**

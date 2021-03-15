@@ -6,6 +6,7 @@ import android.content.ActivityNotFoundException
 import android.content.ContextWrapper
 import android.content.Intent
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
@@ -22,6 +23,9 @@ import com.google.android.libraries.places.widget.Autocomplete
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode
 import com.example.hutaohappyplaces.database.DatabaseHandler
 import com.example.hutaohappyplaces.models.HappyPlaceModel
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.database.FirebaseDatabase
 import com.karumi.dexter.Dexter
 import com.karumi.dexter.MultiplePermissionsReport
 import com.karumi.dexter.PermissionToken
@@ -41,7 +45,7 @@ class AddHappyPlaceActivity : AppCompatActivity(), View.OnClickListener {
      * An variable to get an instance calendar using the default time zone and locale.
      */
     private var cal = Calendar.getInstance()
-
+    private var currentUser: FirebaseUser? = null
     /**
      * A variable for DatePickerDialog OnDateSetListener.
      * The listener used to indicate the user has finished selecting a date. Which we will be initialize later on.
@@ -61,7 +65,7 @@ class AddHappyPlaceActivity : AppCompatActivity(), View.OnClickListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         //This call the parent constructor
         super.onCreate(savedInstanceState)
-
+        currentUser = FirebaseAuth.getInstance().currentUser
         // This is used to align the xml view to this class
         setContentView(R.layout.activity_add_happy_place)
 
@@ -200,7 +204,7 @@ class AddHappyPlaceActivity : AppCompatActivity(), View.OnClickListener {
 
                         // Assigning all the values to data model class.
                         val happyPlaceModel = HappyPlaceModel(
-                                if (mHappyPlaceDetails == null) 0 else mHappyPlaceDetails!!.id,
+                                //if (mHappyPlaceDetails == null) 0 else mHappyPlaceDetails!!.id,
                                 et_title.text.toString(),
                                 saveImageToInternalStorage.toString(),
                                 et_description.text.toString(),
@@ -211,7 +215,7 @@ class AddHappyPlaceActivity : AppCompatActivity(), View.OnClickListener {
                         )
 
                         // Here we initialize the database handler class.
-                        val dbHandler = DatabaseHandler(this)
+                        /*val dbHandler = DatabaseHandler(this)
 
                         if (mHappyPlaceDetails == null) {
                             val addHappyPlace = dbHandler.addHappyPlace(happyPlaceModel)
@@ -227,6 +231,29 @@ class AddHappyPlaceActivity : AppCompatActivity(), View.OnClickListener {
                                 setResult(RESULT_OK);
                                 finish()//finishing activity
                             }
+                        }*/
+                        val dbHandler = FirebaseDatabase.getInstance()
+                        val dbref = dbHandler.getReference("users")
+                            .child(currentUser!!.email!!.toString().replace('.', ',')).child("places")
+                        if (mHappyPlaceDetails == null) {
+                            val addHappyPlace = dbref.push().setValue(happyPlaceModel) { error, ref ->
+                                if (error == null) {
+                                    setResult(RESULT_OK);
+                                    finish()//finishing activity
+                                }
+                            }
+                        } else {
+                            val editHappyPlace = dbref.child(intent.getStringExtra(MainActivity.KEY).toString())
+                                .setValue(happyPlaceModel) {
+                                    error, ref ->
+                                    run {
+                                        if (error == null) {
+                                            setResult(RESULT_OK)
+                                            finish()
+                                        }
+                                    }
+                                }
+
                         }
                     }
                 }

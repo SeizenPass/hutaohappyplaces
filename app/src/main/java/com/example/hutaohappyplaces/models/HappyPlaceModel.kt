@@ -1,5 +1,6 @@
 package com.example.hutaohappyplaces.models
 
+import android.graphics.Bitmap
 import java.io.Serializable
 
 /**
@@ -7,7 +8,7 @@ import java.io.Serializable
  * dealing with local SQLite database.
  */
 data class HappyPlaceModel(
-    val id: Int,
+    //val id: Int,
     val title: String,
     val image: String,
     val description: String,
